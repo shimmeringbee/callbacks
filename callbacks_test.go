@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"github.com/stretchr/testify/assert"
-	"reflect"
 	"testing"
 )
 
@@ -20,7 +19,7 @@ func TestCallbacks(t *testing.T) {
 			return nil
 		}
 
-		cb := Callbacks{callbacks: map[reflect.Type][]interface{}{}}
+		cb := Create()
 		cb.Add(funcOne)
 
 		err := cb.Call(context.Background(), EventOne{})
@@ -36,7 +35,7 @@ func TestCallbacks(t *testing.T) {
 			return expectedError
 		}
 
-		cb := Callbacks{callbacks: map[reflect.Type][]interface{}{}}
+		cb := Create()
 		cb.Add(funcOne)
 
 		err := cb.Call(context.Background(), EventOne{})
@@ -53,7 +52,7 @@ func TestCallbacks(t *testing.T) {
 			return nil
 		}
 
-		cb := Callbacks{callbacks: map[reflect.Type][]interface{}{}}
+		cb := Create()
 		cb.Add(funcOne)
 
 		err := cb.Call(context.Background(), EventTwo{})

@@ -9,6 +9,10 @@ type Callbacks struct {
 	callbacks map[reflect.Type][]interface{}
 }
 
+func Create() *Callbacks {
+	return &Callbacks{callbacks: map[reflect.Type][]interface{}{}}
+}
+
 func (c *Callbacks) Add(f interface{}) {
 	funcType := reflect.TypeOf(f)
 
