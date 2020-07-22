@@ -5,6 +5,19 @@ import (
 	"reflect"
 )
 
+type Adder interface {
+	Add(f interface{})
+}
+
+type Caller interface {
+	Call(ctx context.Context, event interface{}) error
+}
+
+type AdderCaller interface {
+	Adder
+	Caller
+}
+
 type Callbacks struct {
 	callbacks map[reflect.Type][]interface{}
 }
