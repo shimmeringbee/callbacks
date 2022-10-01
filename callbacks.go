@@ -3,6 +3,7 @@ package callbacks
 import (
 	"context"
 	"reflect"
+	"sync"
 )
 
 type Adder interface {
@@ -19,11 +20,12 @@ type AdderCaller interface {
 }
 
 type Callbacks struct {
+	m         *sync.RWMutex
 	callbacks map[reflect.Type][]interface{}
 }
 
 func Create() *Callbacks {
-	return &Callbacks{callbacks: map[reflect.Type][]interface{}{}}
+	return &Callbacks{callbacks: map[reflect.Type][]interface{}{}, m: &sync.RWMutex{}}
 }
 
 func (c *Callbacks) Add(f interface{}) {
@@ -53,6 +55,9 @@ func (c *Callbacks) Add(f interface{}) {
 
 	eventType := funcType.In(1)
 
+	c.m.Lock()
+	defer c.m.Unlock()
+
 	_, found := c.callbacks[eventType]
 
 	if !found {
@@ -65,7 +70,9 @@ func (c *Callbacks) Add(f interface{}) {
 func (c *Callbacks) Call(ctx context.Context, event interface{}) error {
 	eventType := reflect.TypeOf(event)
 
+	c.m.RLock()
 	array, found := c.callbacks[eventType]
+	c.m.RUnlock()
 
 	if found {
 		for _, cb := range array {

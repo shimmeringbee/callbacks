@@ -42,7 +42,7 @@ This piece of software is not ready for general use.
         return nil
     }
 
-    cb := Callbacks{callbacks: map[reflect.Type][]interface{}{}}
+    cb := callbacks.Create()
     cb.Add(funcOne)
 
     err := cb.Call(context.Background(), EventOne{})
